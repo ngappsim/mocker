@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ x"$1" = x"add" ]; then
+	if [ x"$2" = x"local" ]; then
+		sudo brctl addbr mocker-$3
+		sudo ifconfig mocker-$3 0.0.0.0 up
+	fi
+	if [ x"$2" = x"global" ]; then
+		sudo brctl addbr mocker-$4
+		sudo ifconfig mocker-$4 0.0.0.0 up
+		sudo brctl addif mocker-$4 $3
+	fi
+elif [ x"$1" = x"del" ]; then
+	if [ x"$2" = x"local" ]; then
+		sudo brctl delbr mocker-$3
+	fi
+	if [ x"$2" = x"global" ]; then
+		sudo brctl delif mocker-$4 $3
+		sudo brctl delbr mocker-$4
+	fi
+
+else
+	echo "$0: Invalid method."
+	exit
+fi

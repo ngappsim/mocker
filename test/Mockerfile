@@ -1,0 +1,13 @@
+USER=mymocker
+HOST=mymocker
+useradd -G sudo -m -s /bin/bash $USER
+echo $HOST > /etc/hostname
+echo "127.0.0.1    localhost.localdomain localhost" > /etc/hosts
+echo "127.0.0.1    $HOST" >> /etc/hosts
+
+apt update
+apt -y upgrade
+apt install -y ifupdown net-tools network-manager
+apt install -y udev sudo ssh
+apt install -y vim
+exit

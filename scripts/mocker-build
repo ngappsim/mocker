@@ -1,0 +1,41 @@
+#!/bin/bash
+
+sudo apt-get install qemu qemu-user-static binfmt-support debootstrap
+#fallocate -l 1000M rootfs.img
+#mkfs.ext4 rootfs.img
+mkdir tmp
+
+if [ x"$1" = x"ubuntu" ]; then
+	wget -c http://cdimage.ubuntu.com/ubuntu-base/releases/$2/release/ubuntu-base-$2-base-$3.tar.gz
+	#sudo mount rootfs.img mnt
+	sudo tar -xzf ubuntu-base-$2-base-$3.tar.gz -C tmp/
+else
+	echo "Distribution not supported."
+	exit
+fi
+
+sudo cp /etc/resolv.conf tmp/etc/resolv.conf
+sudo cp Hackdocfile tmp/entry.sh
+sudo chroot tmp /bin/bash /entry.sh
+
+sudo echo "/bin/bash /start.sh \$1" > tmp/init.sh
+sudo chmod +x tmp/init.sh
+
+sudo echo "mount -t proc proc /proc" > tmp/start.sh
+sudo echo "while true" >> tmp/start.sh
+sudo echo "do" >> tmp/start.sh
+sudo echo "sleep 10" >> tmp/start.sh
+sudo echo "done" >> tmp/start.sh
+sudo chmod +x tmp/start.sh
+
+sudo echo "hostname mocker" > tmp/exec_entry.sh
+sudo echo "su mocker" >> tmp/exec_entry.sh
+
+cd tmp
+mkdir -p ~/.mocker/images/
+sudo tar zcf ~/.mocker/images/$4.tar.gz ./
+#sudo umount mnt/
+cd ..
+sudo chown $USER:$USER ~/.mocker/images/$4.tar.gz
+sudo rm -rf tmp ubuntu-base-18.04-base-amd64.tar.gz
+

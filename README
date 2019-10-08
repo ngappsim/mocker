@@ -1,0 +1,21 @@
+How to test
+===========
+1. export PATH=${PWD}/scripts:$PATH
+
+2. Just like docker -
+
+2.1 Build image
+    # cd test/
+    # ls -l Mockerfile
+    # mocker build ubuntu 18.04 amd64 ubuntu1804-img
+
+2.2 Create network
+    # mocker network add local hdnet
+      Or,
+    # mocker network add global eth1 hdnet
+
+2.3 Run the container
+    # mocker run ubuntu1804 ubuntu1804-img hdnet
+
+2.4 Enter into the container
+    # mocker exec ubuntu1804

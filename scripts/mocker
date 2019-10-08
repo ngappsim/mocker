@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ x"$1" = x"build" ]; then
+	shift 1
+	mocker-build "$@"
+fi
+
+if [ x"$1" = x"remove" ]; then
+	shift 1
+	mocker-remove "$@"
+fi
+
+if [ x"$1" = x"network" ]; then
+	shift 1
+	mocker-net "$@"
+fi
+
+if [ x"$1" = x"run" ]; then
+	shift 1
+	mocker-run "$@"
+fi
+
+if [ x"$1" = x"exec" ]; then
+	shift 1
+	mocker-exec "$@"
+fi
+
+echo "$@"
+echo "Done"

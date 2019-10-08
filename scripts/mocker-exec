@@ -1,0 +1,4 @@
+#!/bin/bash
+
+pid=`ps aux | grep -e "/bin/bash /start.sh $1" | grep -e root | awk '{print $2}'`
+sudo nsenter -a -t ${pid} chroot ~/.mocker/rootfs-$1 /bin/bash /exec_entry.sh

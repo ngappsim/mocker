@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sudo rm -rf ~/.mocker/rootfs-$1
+mkdir -p ~/.mocker/rootfs-$1
+sudo tar zxf ~/.mocker/images/$2.tar.gz -C ~/.mocker/rootfs-$1
+sudo unshare -i -n -p -u -f chroot ~/.mocker/rootfs-$1 /bin/bash /init.sh $1 &
+sleep 5
+sudo ip link add dev veth-$1 type veth peer name vtap-$1
+sudo brctl addif mocker-$3 vtap-$1
+pid=`ps aux | grep -e "/bin/bash /start.sh $1" | grep -e root | awk '{print $2}'`
+#pid=$((pid + 2))
+sudo mkdir -p /var/run/netns/
+sudo touch /var/run/netns/netns-$1
+sudo mount -t none -o bind /proc/${pid}/ns/net /var/run/netns/netns-$1
+sudo ip link set veth-$1 netns netns-$1
