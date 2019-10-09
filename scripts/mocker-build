@@ -15,7 +15,7 @@ else
 fi
 
 sudo cp /etc/resolv.conf tmp/etc/resolv.conf
-sudo cp Hackdocfile tmp/entry.sh
+sudo cp Mockerfile tmp/entry.sh
 sudo chroot tmp /bin/bash /entry.sh
 
 sudo echo "/bin/bash /start.sh \$1" > tmp/init.sh
